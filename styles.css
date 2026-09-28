@@ -1467,17 +1467,18 @@ h6 {
 
 /* --- CONTACT SECTION & FOOTER --- */
 .contact-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.15fr;
-  gap: 48px;
-  align-items: stretch;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .contact-info-card {
+  max-width: 780px;
+  width: 100%;
   background: var(--navy-900);
   color: #ffffff;
   border-radius: var(--radius-xl);
-  padding: 48px 40px;
+  padding: 52px 48px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

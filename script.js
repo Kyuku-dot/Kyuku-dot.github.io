@@ -298,59 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- 7. CONTACT FORM SUBMISSION TO WHATSAPP ---
-  const contactForm = document.getElementById('contact-form');
-  if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
 
-      const nameInput = document.getElementById('form-name');
-      const emailInput = document.getElementById('form-email');
-      const subjectInput = document.getElementById('form-subject');
-      const messageInput = document.getElementById('form-message');
-
-      const name = nameInput ? nameInput.value.trim() : '';
-      const email = emailInput ? emailInput.value.trim() : '';
-      const subject = subjectInput ? subjectInput.value.trim() : '';
-      const message = messageInput ? messageInput.value.trim() : '';
-
-      if (!name || !email || !message) {
-        showToast('Silakan lengkapi nama, email, dan pesan terlebih dahulu.');
-        return;
-      }
-
-      // Submit feedback button state
-      const submitBtn = document.getElementById('btn-submit-form');
-      const originalText = submitBtn.innerHTML;
-      submitBtn.innerHTML = `<span>Membuka WhatsApp...</span>`;
-      submitBtn.disabled = true;
-
-      // Construct professional WhatsApp message
-      let waText = `Halo Citra Gama Prameswari, saya melihat portofolio Anda di website.\n\n`;
-      waText += `*Nama:* ${name}\n`;
-      waText += `*Email:* ${email}\n`;
-      if (subject) {
-        waText += `*Kebutuhan:* ${subject}\n`;
-      }
-      waText += `\n*Isi Pesan:*\n${message}`;
-
-      const waUrl = `https://wa.me/6285704180083?text=${encodeURIComponent(waText)}`;
-
-      setTimeout(() => {
-        submitBtn.innerHTML = `<span>Membuka WhatsApp...</span> ✓`;
-        showToast(`Mengarahkan pesan Anda ke WhatsApp Citra...`);
-
-        // Open WhatsApp in new tab / app
-        window.open(waUrl, '_blank');
-
-        setTimeout(() => {
-          contactForm.reset();
-          submitBtn.innerHTML = originalText;
-          submitBtn.disabled = false;
-        }, 1500);
-      }, 500);
-    });
-  }
 
   // --- 8. TOAST NOTIFICATION UTILITY ---
   let toastTimeout;
