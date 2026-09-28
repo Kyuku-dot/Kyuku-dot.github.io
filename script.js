@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- 6. COPY EMAIL TO CLIPBOARD ---
+  // --- 6. COPY EMAIL & WHATSAPP TO CLIPBOARD ---
   const copyEmailBtn = document.getElementById('copy-email-btn');
   const emailAddress = 'cgama034@gmail.com';
 
@@ -260,7 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
           await navigator.clipboard.writeText(emailAddress);
           showToast('Email berhasil disalin ke clipboard!');
         } else {
-          // Fallback
           const tempInput = document.createElement('textarea');
           tempInput.value = emailAddress;
           document.body.appendChild(tempInput);
@@ -275,7 +274,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- 7. CONTACT FORM SUBMISSION SIMULATION ---
+  const copyWaBtn = document.getElementById('copy-wa-btn');
+  const waNumber = '+6285704180083';
+
+  if (copyWaBtn) {
+    copyWaBtn.addEventListener('click', async () => {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(waNumber);
+          showToast('Nomor WhatsApp berhasil disalin ke clipboard!');
+        } else {
+          const tempInput = document.createElement('textarea');
+          tempInput.value = waNumber;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempInput);
+          showToast('Nomor WhatsApp berhasil disalin ke clipboard!');
+        }
+      } catch (err) {
+        showToast('Nomor WhatsApp: ' + waNumber);
+      }
+    });
+  }
+
+  // --- 7. CONTACT FORM SUBMISSION TO WHATSAPP ---
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
@@ -292,29 +315,40 @@ document.addEventListener('DOMContentLoaded', () => {
       const message = messageInput ? messageInput.value.trim() : '';
 
       if (!name || !email || !message) {
-        showToast('Silakan lengkapi formulir terlebih dahulu.');
+        showToast('Silakan lengkapi nama, email, dan pesan terlebih dahulu.');
         return;
       }
 
-      // Submit feedback simulation
+      // Submit feedback button state
       const submitBtn = document.getElementById('btn-submit-form');
       const originalText = submitBtn.innerHTML;
-      submitBtn.innerHTML = `<span>Mengirim Pesan...</span>`;
+      submitBtn.innerHTML = `<span>Membuka WhatsApp...</span>`;
       submitBtn.disabled = true;
 
-      setTimeout(() => {
-        submitBtn.innerHTML = `<span>Terkirim!</span> ✓`;
-        showToast(`Terima kasih ${name}, pesan Anda berhasil dikirim!`);
+      // Construct professional WhatsApp message
+      let waText = `Halo Citra Gama Prameswari, saya melihat portofolio Anda di website.\n\n`;
+      waText += `*Nama:* ${name}\n`;
+      waText += `*Email:* ${email}\n`;
+      if (subject) {
+        waText += `*Kebutuhan:* ${subject}\n`;
+      }
+      waText += `\n*Isi Pesan:*\n${message}`;
 
-        // Prepare mailto fallback URL
-        const mailtoUrl = `mailto:cgama034@gmail.com?subject=${encodeURIComponent(subject || 'Pesan dari Portofolio')}&body=${encodeURIComponent(`Nama: ${name}\nEmail: ${email}\n\nPesan:\n${message}`)}`;
+      const waUrl = `https://wa.me/6285704180083?text=${encodeURIComponent(waText)}`;
+
+      setTimeout(() => {
+        submitBtn.innerHTML = `<span>Membuka WhatsApp...</span> ✓`;
+        showToast(`Mengarahkan pesan Anda ke WhatsApp Citra...`);
+
+        // Open WhatsApp in new tab / app
+        window.open(waUrl, '_blank');
 
         setTimeout(() => {
           contactForm.reset();
           submitBtn.innerHTML = originalText;
           submitBtn.disabled = false;
-        }, 2500);
-      }, 900);
+        }, 1500);
+      }, 500);
     });
   }
 
